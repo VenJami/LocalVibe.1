@@ -17,12 +17,16 @@ export const createPostAction =
         type: 'postCreateRequest',
       });
 
-      const config = {headers: {'Content-Type': 'application/json'}};
+      const token = await AsyncStorage.getItem('token');
 
       const {data} = await axios.post(
         `${URI}/create-post`,
         {title, image, user, replies},
-        config,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       dispatch({
         type: 'postCreateSuccess',
@@ -36,7 +40,7 @@ export const createPostAction =
     }
   };
 
-  // get all Posts
+// get all Posts
 export const getAllPosts = () => async (dispatch: Dispatch<any>) => {
   try {
     dispatch({

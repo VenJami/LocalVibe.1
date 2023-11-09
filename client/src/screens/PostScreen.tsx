@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
-import { createPostAction } from '../../redux/actions/postAction';
+import { createPostAction, getAllPosts } from '../../redux/actions/postAction';
 
 type Props = {
   navigation: any;
@@ -26,6 +26,7 @@ const PostScreen = ({navigation}: Props) => {
     }
     if (isSuccess) {
       navigation.goBack();
+      getAllPosts()(dispatch);
     }
     setReplies([]);
     setTitle('');
