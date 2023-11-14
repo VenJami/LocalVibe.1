@@ -5,29 +5,39 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Image} from 'react-native';
 import getTimeDuration from '../common/TimeGenerator';
+import {
+  addLikes,
+  getAllPosts,
+  removeLikes,
+} from '../../redux/actions/postAction';
 import axios from 'axios';
 import {URI} from '../../redux/URI';
+import PostDetailsCard from './PostDetailsCard';
+
 
 type Props = {
   navigation: any;
   item: any;
+  isReply?: boolean | null;
+  postId?: string | null;
+  replies?: boolean | null;
 };
 
-const PostCard = ({navigation, item}: Props) => {
-  const {user, token, users} = useSelector((state: any) => state.user);
+const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
+  const {user, token,users} = useSelector((state: any) => state.user);
   const {posts} = useSelector((state: any) => state.post);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
-  // const [userInfo, setUserInfo] = useState({
-  //   name: '',
-  //   avatar: {
-  //     url: 'https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png',
-  //   },
-  // });
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    avatar: {
+      url: 'https://res.cloudinary.com/dshp9jnuy/image/upload/v1665822253/avatars/nrxsg8sd9iy10bbsoenn.png',
+    },
+  });
   const time = item?.createdAt;
   const formattedDuration = getTimeDuration(time);
 
@@ -47,35 +57,71 @@ const PostCard = ({navigation, item}: Props) => {
       });
   };
 
+  const reactsHandler = (e: any) => {
+    if (item.likes.length !== 0) {
+      const isLikedBefore = item.likes.find((i: any) => i.userId === user._id);
+      if (isLikedBefore) {
+        removeLikes({postId: postId ? postId : e._id, posts, user})(dispatch);
+      } else {
+        addLikes({postId: postId ? postId : e._id, posts, user})(dispatch);
+      }
+    } else {
+      addLikes({postId: postId ? postId : e._id, posts, user})(dispatch);
+    }
+  };
+
+  const deletePostHandler = async (e: any) => {
+    await axios
+      .delete(`${URI}/delete-post/${e}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        getAllPosts()(dispatch);
+      });
+  };
+
+  useEffect(() => {
+   if(users){
+    const updatedUsers = [...users, user];
+    const userData = updatedUsers.find((user: any) =>
+        user._id === item.user._id
+     );
+     setUserInfo(userData);
+   }
+  }, [users]);
+
   return (
-    <View className="p-[15px] mt-[5%] border-b border-b-[#00000017]">
+    <View className="p-[15px] border-b border-b-[#F1FFF8] bg-white" >
       <View className="relative">
         <View className="flex-row w-full">
           <View className="flex-row w-[85%] items-center">
             <TouchableOpacity onPress={() => profileHandler(item.user)}>
               <Image
-                source={{uri: item.user.avatar.url}}
+                source={{uri: userInfo?.avatar?.url}}
                 width={40}
                 height={40}
                 borderRadius={100}
               />
             </TouchableOpacity>
-
             <View className="pl-3 w-[70%]">
-              <TouchableOpacity className="flex-row items-center">
+              <TouchableOpacity
+                className="flex-row items-center"
+                onPress={() => profileHandler(userInfo)}>
                 <Text className="text-black font-[500] text-[16px]">
-                  {item.user.name}
+                  {userInfo?.name}
                 </Text>
-                {/* {userInfo?.role === 'Admin' && (
-                                <Image
-                                    source={{
-                                    uri: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png',
-                                    }}
-                                    width={15}
-                                    height={15}
-                                    className="ml-1"
-                                />
-                                )} */}
+                {userInfo?.role === 'Admin' && (
+                  <Image
+                    source={{
+                      uri: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png',
+                    }}
+                    width={15}
+                    height={15}
+                    className="ml-1"
+                  />
+                )}
               </TouchableOpacity>
               <Text className="text-black font-[500] text-[13px]">
                 {item.title}
@@ -99,14 +145,13 @@ const PostCard = ({navigation, item}: Props) => {
             />
           )}
         </View>
-        {item.image ? (
+        {/* {item.image ? (
           <View className="absolute top-12 left-5 h-[90%] w-[1px] bg-[#00000017]" />
         ) : (
           <View className="absolute top-12 left-5 h-[60%] w-[1px] bg-[#00000017]" />
-        )}
-
+        )} */}
         <View className="flex-row items-center left-[50px] top-[5px]">
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => reactsHandler(item)}>
             {item.likes.length > 0 ? (
               <>
                 {item.likes.find((i: any) => i.userId === user._id) ? (
@@ -138,14 +183,13 @@ const PostCard = ({navigation, item}: Props) => {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            // onPress={() => {
-            //   navigation.navigate('CreateReplies', {
-            //     item: item,
-            //     navigation: navigation,
-            //     postId: postId,
-            //   });
-            // }}
-            >
+            onPress={() => {
+              navigation.navigate('CreateReplies', {
+                item: item,
+                navigation: navigation,
+                postId: postId,
+              });
+            }}>
             <Image
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/512/5948/5948565.png',
@@ -176,22 +220,22 @@ const PostCard = ({navigation, item}: Props) => {
             />
           </TouchableOpacity>
         </View>
-
-
-        <View className="pl-[50px] pt-4 flex-row">
+        {!isReply && (
+          <View className="pl-[50px] pt-4 flex-row">
             <TouchableOpacity
-            //   onPress={() =>
-            //     navigation.navigate('PostDetails', {
-            //       data: item,
-            //     })
-            //   }
-              >
+              onPress={() =>
+                navigation.navigate('PostDetails', {
+                  data: item,
+                })
+              }>
               <Text className="text-[16px[ text-[#0000009b]">
-                {item.replies.length !== 0 &&
-                  `${item.replies.length} replies ·`}{' '}
+                {item?.replies?.length !== 0 &&
+                  `${item?.replies?.length} replies ·`}{' '}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+
+            {item.likes.length !== 0 &&
+              <TouchableOpacity
               onPress={() =>
                 item.likes.length !== 0 &&
                 navigation.navigate('PostLikeCard', {
@@ -203,9 +247,50 @@ const PostCard = ({navigation, item}: Props) => {
                 {item.likes.length} {item.likes.length > 1 ? 'likes' : 'like'}
               </Text>
             </TouchableOpacity>
+            }
           </View>
+        )}
 
-
+        {replies && (
+          <>
+            {item?.replies?.map((i: any) => (
+              <PostDetailsCard
+                navigation={navigation}
+                key={i._id}
+                item={i}
+                isReply={true}
+                postId={item._id}
+              />
+            ))}
+          </>
+        )}
+        {openModal && (
+          <View className="flex-[1] justify-center items-center mt-[22]">
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={openModal}
+              onRequestClose={() => {
+                setOpenModal(!openModal);
+              }}>
+              <TouchableWithoutFeedback onPress={() => setOpenModal(false)}>
+                <View className="flex-[1] justify-end bg-[#00000059]">
+                  <TouchableWithoutFeedback onPress={() => setOpenModal(true)}>
+                    <View className="w-full bg-[#fff] h-[120] rounded-[20px] p-[20px] items-center shadow-[#000] shadow-inner">
+                      <TouchableOpacity
+                        className="w-full bg-[#00000010] h-[50px] rounded-[10px] items-center flex-row pl-5"
+                        onPress={() => deletePostHandler(item._id)}>
+                        <Text className="text-[18px] font-[600] text-[#e24848]">
+                          Delete
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
+          </View>
+        )}
       </View>
     </View>
   );

@@ -19,7 +19,6 @@ export const registerUser =
         {name, email, password, avatar},
         config,
       );
-
       dispatch({
         type: 'userRegisterSuccess',
         payload: data.user,
@@ -28,7 +27,7 @@ export const registerUser =
     } catch (error: any) {
       dispatch({
         type: 'userRegisterFailed',
-        payload: error.response?.data.message,
+        payload: error.response.data.message,
       });
     }
   };
@@ -76,12 +75,10 @@ export const loginUser =
         {email, password},
         config,
       );
-
       dispatch({
         type: 'userLoginSuccess',
         payload: data.user,
       });
-
       if (data.token) {
         await AsyncStorage.setItem('token', data.token);
       }

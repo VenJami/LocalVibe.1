@@ -3,7 +3,7 @@ const ErrorHandler = require("../utils/ErrorHandler.js");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken.js");
 const cloudinary = require("cloudinary");
-const Notification = require("../models/NotificationModel.js");
+const Notification = require("../models/NotificationModel");
 
 // Register user
 exports.createUser = catchAsyncErrors(async (req, res, next) => {
@@ -92,7 +92,6 @@ exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
 //  Get user Details
 exports.userDetails = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
-
   res.status(200).json({
     success: true,
     user,
@@ -188,12 +187,63 @@ exports.getNotification = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-// get single user
+// get signle user
 exports.getUser = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
 
     res.status(201).json({ success: true, user });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 401));
+  }
+});
+
+// update user avatar
+exports.updateUserAvatar = catchAsyncErrors(async (req, res, next) => {
+  try {
+    let existsUser = await User.findById(req.user.id);
+
+    if (req.body.avatar !== "") {
+      const imageId = existsUser.avatar.public_id;
+
+      await cloudinary.v2.uploader.destroy(imageId);
+
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
+      });
+
+      existsUser.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    }
+    await existsUser.save();
+
+    res.status(200).json({
+      success: true,
+      user: existsUser,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 401));
+  }
+});
+
+// update user info
+exports.updateUserInfo = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    user.name = req.body.name;
+    user.userName = req.body.userName;
+    user.bio = req.body.bio;
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      user,
+    });
   } catch (error) {
     return next(new ErrorHandler(error.message, 401));
   }

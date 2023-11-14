@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../src/screens/HomeScreen';
 import ChatScreen from '../src/screens/ChatScreen';
 import MapScreen from '../src/screens/MapScreen';
-import NotifScreen from '../src/screens/NotifScreen';
+import NotificationScreen from '../src/screens/NotificationScreen';
 import FriendScreen from '../src/screens/FriendScreen';
 import {View, Image, StyleSheet} from 'react-native';
 
@@ -78,7 +78,7 @@ const Tabs = (props: Props) => {
       />
       <Tab.Screen
         name="Notif"
-        component={NotifScreen}
+        component={NotificationScreen}
         options={({route}) => ({
           tabBarIcon: ({focused}) => (
             <View
