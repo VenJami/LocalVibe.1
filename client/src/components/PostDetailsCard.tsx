@@ -157,10 +157,10 @@ const PostDetailsCard = ({
 
   return (
     <View
-      className={`p-[15px] ${!isReply && 'border-b-[#00000017] border-b'}`}
+      className={'p-[15px] bg-[#F1FFF8] h-full'}
       style={{left: isReply ? 20 : 0, width: isReply ? '95%' : '100%'}}>
-      <View className="relative">
-        <View className="flex-row w-full justify-between">
+      <View className="relative bg-[#F1FFF8] h-full">
+        <View className="flex-row w-full justify-between bg-[#F1FFF8]">
           <View className="flex-row items-center">
             <TouchableOpacity onPress={() => profileHandler(userInfo)}>
               <Image
@@ -203,7 +203,7 @@ const PostDetailsCard = ({
             </TouchableOpacity>
           </View>
         </View>
-        <View className="ml-[50px] my-3">
+        <View className="ml-[50px] ">
           {item.image && (
             <Image
               source={{uri: item.image.url}}
@@ -212,11 +212,7 @@ const PostDetailsCard = ({
             />
           )}
         </View>
-        {item.image ? (
-          <View className="absolute top-14 left-5 h-[90%] w-[1px] bg-[#00000017]" />
-        ) : (
-          <View className="absolute top-12 left-5 h-[60%] w-[1px] bg-[#00000017]" />
-        )}
+        
         <View className="flex-row items-center left-[50px] top-[5px]">
           <TouchableOpacity
             onPress={() =>

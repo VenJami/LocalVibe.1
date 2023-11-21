@@ -47,9 +47,9 @@ const NotificationScreen = ({navigation}: Props) => {
         <Loader />
       ) : (
         <>
-          <SafeAreaView>
-            <View className="p-3 mb-[190px]">
-              <Text className="text-3xl font-[700] text-black">Activity</Text>
+          <SafeAreaView className='bg-[#F1FFF8] h-full'>
+            <View className="p-3 mb-[190px] bg-[#F1FFF8]">
+              <Text className="text-3xl font-[700] text-[#017E5E]">Activity</Text>
 
               <View className="w-full flex-row my-3 justify-between">
                 {labels.map((label, index) => (
@@ -57,14 +57,14 @@ const NotificationScreen = ({navigation}: Props) => {
                     key={index}
                     className="w-[105px] h-[38px] rounded-[8px]"
                     style={{
-                      backgroundColor: active === index ? 'black' : '#fff',
+                      backgroundColor: active === index ? '#017E5E' : '#fff',
                       borderWidth: active === index ? 1 : 0,
                       borderColor: 'rgba(0,0,0,0.29)',
                     }}
                     onPress={() => handleTabPress(index)}>
                     <Text
                       className={`${
-                        active !== index ? 'text-black' : 'text-[#fff]'
+                        active !== index ? 'text-[#017E5E]' : 'text-[#fff]'
                       } text-[20px] font-[600] text-center pt-[6px]`}>
                       {label}
                     </Text>

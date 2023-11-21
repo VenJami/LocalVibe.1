@@ -50,7 +50,7 @@ const ProfileScreen = ({navigation}: Props) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar backgroundColor="#F1FFF8" barStyle="dark-content" />
-      <SafeAreaView className="relative bg-[#F1FFF8]">
+      <SafeAreaView className="relative bg-[#F1FFF8] drop-shadow-2xl">
         <View className='bg-[#F1FFF8]'>
           <View className="px-3 pt-3">
             <TouchableOpacity onPress={() => navigation.goBack()}>

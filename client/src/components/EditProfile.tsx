@@ -74,7 +74,7 @@ import {
     };
   
     return (
-      <SafeAreaView>
+      <SafeAreaView className='bg-[#F1FFF8] h-full'>
         <View className="flex-row items-center justify-between p-3">
           <View className="flex-row items-center">
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -94,8 +94,8 @@ import {
             <Text className="text-[20px] text-black">Done</Text>
           </TouchableOpacity>
         </View>
-        <View className="h-[90%] items-center justify-center">
-          <View className="w-[90%] p-3 min-h-[300] h-max border rounded-[10px] border-[#0000002e]">
+        <View className="h-[90%] items-center justify-center ">
+          <View className="bg-white w-[90%] p-3 min-h-[300] h-max border rounded-[10px] border-[#0000002e]">
             <View className="flex-row">
               <View className="w-full flex-row justify-between">
                 <View>

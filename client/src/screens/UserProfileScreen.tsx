@@ -145,7 +145,7 @@ const UserProfileScreen = ({navigation, route}: Props) => {
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                  className="mt-2 rounded-[8px] w-full flex-row justify-center items-center h-[38px] bg-black"
+                  className="mt-2 rounded-[8px] w-full flex-row justify-center items-center h-[38px] bg-[#017E5E]"
                   onPress={FollowUnfollowHandler}>
                   <Text className="text-white text-[18px]">
                     {data.followers.find((i: any) => i.userId === user._id)
@@ -160,7 +160,7 @@ const UserProfileScreen = ({navigation, route}: Props) => {
                         className="text-[18px] pl-3 text-black"
                         style={{opacity: active === 0 ? 1 : 0.6}}>
                         {' '}
-                        Threads
+                        Posts
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setActive(1)}>
