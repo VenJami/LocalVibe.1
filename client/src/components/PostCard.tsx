@@ -209,7 +209,7 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
               className="ml-5"
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/512/10863/10863770.png',
@@ -218,7 +218,7 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
               height={25}
               className="ml-5"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         {!isReply && (
           <View className="pl-[50px] pt-4 flex-row">

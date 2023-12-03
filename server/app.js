@@ -21,6 +21,29 @@ const locationController = require("./controllers/location");
 // Define a route for updating user location
 app.post("/api/v1/update-location", locationController.updateLocation);
 
+app.post('/saveLocation', async (req, res) => {
+  const { userId, location } = req.body;
+
+  try {
+    // Find the user by userId and update the location
+    const user = await User.findByIdAndUpdate(userId, {
+      location: {
+        type: 'Point',
+        coordinates: [location.longitude, location.latitude],
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.status(200).json({ message: 'Location saved successfully' });
+  } catch (error) {
+    console.error('Error saving location:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Route imports
 const user = require("./routes/user");
 const post = require("./routes/Post");

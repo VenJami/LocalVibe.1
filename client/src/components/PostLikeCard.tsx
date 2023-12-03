@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Image,
     FlatList,
+    StatusBar,
   } from 'react-native';
   import React from 'react';
   import {useDispatch, useSelector} from 'react-redux';
@@ -25,8 +26,9 @@ import {
     const dispatch = useDispatch();
   
     return (
-      <SafeAreaView>
-        <View className="p-3">
+      <SafeAreaView className='flex-1'> 
+      <StatusBar backgroundColor="#F1FFF8" barStyle="dark-content" />
+        <View className="flex-1 p-3 bg-teal-50">
           <View className="flex-row items-center">
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
@@ -63,7 +65,7 @@ import {
               };
               return (
                 <TouchableOpacity
-                  className="w-full py-3 flex-row justify-between"
+                  className="w-full py-4 px-4 m-1 flex-row justify-between bg-white"
                   onPress={() =>
                     item.userId === user._id
                       ? navigation.navigate('Profile')

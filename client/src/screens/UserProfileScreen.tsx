@@ -168,7 +168,7 @@ const UserProfileScreen = ({navigation, route}: Props) => {
                         className="text-[18px] pl-3 text-black"
                         style={{opacity: active === 1 ? 1 : 0.6}}>
                         {' '}
-                        Replies
+                        Vibes
                       </Text>
                     </TouchableOpacity>
                   </View>

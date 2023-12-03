@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Image,
     ScrollView,
+    StatusBar,
   } from 'react-native';
   import React, {useEffect, useState} from 'react';
   import PostDetailsCard from '../components/PostDetailsCard';
@@ -29,9 +30,10 @@ import {
   
     return (
       <SafeAreaView>
-        <View className="relative flex-col justify-between">
+        <StatusBar backgroundColor="#F1FFF8" barStyle="dark-content" />
+        <View className="relative flex-col justify-between bg-teal-50">
           <View className="h-[102%]">
-            <View className="px-3">
+            <View className="px-3 mt-3">
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image
                   source={{

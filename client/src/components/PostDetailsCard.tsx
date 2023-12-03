@@ -157,7 +157,7 @@ const PostDetailsCard = ({
 
   return (
     <View
-      className={'p-[15px] bg-[#F1FFF8] h-full'}
+      className={'p-[15px] h-full'}
       style={{left: isReply ? 20 : 0, width: isReply ? '95%' : '100%'}}>
       <View className="relative bg-[#F1FFF8] h-full">
         <View className="flex-row w-full justify-between bg-[#F1FFF8]">
