@@ -1,18 +1,20 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const ObjectId = require('mongodb').ObjectId;
 
 const userSchema = new mongoose.Schema(
+  
   {
     name: {
       type: String,
       required: [true, "Please enter your Name"],
     },
     userName: {
-      type:String,
+      type: String,
     },
-    bio:{
-      type:String,
+    bio: {
+      type: String,
     },
     email: {
       type: String,
@@ -25,13 +27,32 @@ const userSchema = new mongoose.Schema(
     avatar: {
       public_id: {
         type: String,
-        required: [true,"Please upload one profile picture!"],
+        required: [true, "Please upload one profile picture!"],
       },
       url: {
         type: String,
-        required: [true,"Please upload one profile picture!"],
+        required: [true, "Please upload one profile picture!"],
       },
     },
+    friendRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    friends: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ObjectId,
+        ref: "User",
+      },
+    ],
+    sentFriendRequest: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     followers: [
       {
         userId: {

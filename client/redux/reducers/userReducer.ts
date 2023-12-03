@@ -8,6 +8,8 @@ const intialState = {
   users: [],
   token:"",
   error: null,
+  friendRequests: [],
+  acceptedFriends: [],
 };
 
 export const userReducer = createReducer(intialState, {
@@ -80,4 +82,5 @@ export const userReducer = createReducer(intialState, {
     state.error = null;
     state.isAuthenticated = false;
   },
+  
 });

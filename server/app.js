@@ -15,6 +15,12 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   });
 }
 
+// Import the locationController
+const locationController = require("./controllers/location");
+
+// Define a route for updating user location
+app.post("/api/v1/update-location", locationController.updateLocation);
+
 // Route imports
 const user = require("./routes/user");
 const post = require("./routes/Post");

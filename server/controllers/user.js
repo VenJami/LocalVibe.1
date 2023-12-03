@@ -4,6 +4,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const sendToken = require("../utils/jwtToken.js");
 const cloudinary = require("cloudinary");
 const Notification = require("../models/NotificationModel");
+const express = require("express");
 
 // Register user
 exports.createUser = catchAsyncErrors(async (req, res, next) => {
@@ -246,5 +247,92 @@ exports.updateUserInfo = catchAsyncErrors(async (req, res, next) => {
     });
   } catch (error) {
     return next(new ErrorHandler(error.message, 401));
+  }
+});
+
+// endpoint to send a friend request
+exports.sendFriendRequest = catchAsyncErrors(async (req, res, next) => {
+  const { currentUserId, selectedUserId } = req.body;
+
+  try {
+    await User.findByIdAndUpdate(selectedUserId, {
+      $push: { friendRequests: currentUserId },
+    });
+
+    await User.findByIdAndUpdate(currentUserId, {
+      $push: { sentFriendRequests: selectedUserId },
+    });
+
+    res.status(200).json({ success: true, message: "Friend request sent successfully" });
+  } catch (error) {
+    next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// endpoint to get friend requests of a particular user
+exports.getFriendRequests = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId)
+      .populate("friendRequests", "name email avatar")
+      .lean();
+
+    const friendRequests = user.friendRequests;
+
+    res.json(friendRequests);
+  } catch (error) {
+    next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// endpoint to accept a friend request
+exports.acceptFriendRequest = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { senderId, recipientId } = req.body;
+
+    const sender = await User.findById(senderId);
+    const recipient = await User.findById(recipientId);
+
+    sender.friends.push(recipientId);
+    recipient.friends.push(senderId);
+
+    recipient.friendRequests = recipient.friendRequests.filter(
+      (request) => request.toString() !== senderId.toString()
+    );
+
+    sender.sentFriendRequests = sender.sentFriendRequests.filter(
+      (request) => request.toString() !== recipientId.toString()
+    );
+
+    await sender.save();
+    await recipient.save();
+
+    res.status(200).json({ success: true, message: "Friend request accepted successfully" });
+  } catch (error) {
+    next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// endpoint to get all accepted friends of the logged-in user
+exports.getAcceptedFriends = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId).populate("friends", "name email avatar");
+    const acceptedFriends = user.friends;
+    res.json(acceptedFriends);
+  } catch (error) {
+    next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// endpoint to get sent friend requests of a particular user
+exports.getSentFriendRequests = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId).populate("sentFriendRequests", "name email avatar").lean();
+    const sentFriendRequests = user.sentFriendRequests;
+    res.json(sentFriendRequests);
+  } catch (error) {
+    next(new ErrorHandler(error.message, 500));
   }
 });
