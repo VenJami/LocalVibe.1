@@ -3,6 +3,7 @@ import {URI} from '../URI';
 import {Dispatch} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 // register user
 export const registerUser =
   (name: string, email: string, password: string, avatar: string) =>

@@ -52,6 +52,17 @@ const MapScreen = () => {
           speed: any;
         };
       }) => {
+        
+        setUserLocation({
+          latitude: geoPosition.coords.latitude,
+          longitude: geoPosition.coords.longitude,
+          accuracy: geoPosition.coords.accuracy,
+          altitude: geoPosition.coords.altitude,
+          altitudeAccuracy: geoPosition.coords.altitudeAccuracy,
+          heading: geoPosition.coords.heading,
+          speed: geoPosition.coords.speed,
+        } as unknown as GeoPosition);
+
         setUserData({
           latitude: geoPosition.coords.latitude,
           longitude: geoPosition.coords.longitude,

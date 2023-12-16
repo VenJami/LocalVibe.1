@@ -26,9 +26,11 @@ const userSchema = new mongoose.Schema(
     },
     latitude:{
       type : Number,
+      default: null,
     },
     longitude:{
       type : Number,
+      default: null,
     },
     avatar: {
       public_id: {
