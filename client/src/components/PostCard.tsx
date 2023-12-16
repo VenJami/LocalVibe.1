@@ -145,11 +145,6 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
             />
           )}
         </View>
-        {/* {item.image ? (
-          <View className="absolute top-12 left-5 h-[90%] w-[1px] bg-[#00000017]" />
-        ) : (
-          <View className="absolute top-12 left-5 h-[60%] w-[1px] bg-[#00000017]" />
-        )} */}
         <View className="flex-row items-center left-[50px] top-[5px]">
           <TouchableOpacity onPress={() => reactsHandler(item)}>
             {item.likes.length > 0 ? (
@@ -192,7 +187,7 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
             }}>
             <Image
               source={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/5948/5948565.png',
+                uri: 'https://i.ibb.co/YT9d89m/comment-alt-middle-1.png',
               }}
               width={22}
               height={22}

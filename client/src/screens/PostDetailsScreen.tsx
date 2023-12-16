@@ -10,6 +10,7 @@ import {
   import React, {useEffect, useState} from 'react';
   import PostDetailsCard from '../components/PostDetailsCard';
   import {useSelector} from 'react-redux';
+import PostCard from '../components/PostCard';
   
   type Props = {
     navigation: any;
@@ -44,8 +45,9 @@ import {
                 />
               </TouchableOpacity>
             </View>
+            
             <ScrollView showsVerticalScrollIndicator={false}>
-              <PostDetailsCard
+              <PostCard
                 navigation={navigation}
                 item={data}
                 postId={data._id}
@@ -53,7 +55,7 @@ import {
               <View>
                 {data?.replies?.map((i: any, index: number) => {
                   return (
-                    <PostDetailsCard
+                    <PostCard
                       navigation={navigation}
                       item={i}
                       key={index}
@@ -66,9 +68,10 @@ import {
               </View>
             </ScrollView>
           </View>
+
           <View className="absolute bottom-8 flex-row w-full justify-center bg-white h-[70px] items-center">
             <TouchableOpacity
-              className="w-[92%] bg-[#00000026] h-[45px] rounded-[40px] flex-row items-center"
+              className="w-[92%] bg-[#F1FFF8] h-[45px] rounded-[40px] flex-row items-center"
               onPress={() =>
                 navigation.replace('CreateReplies', {
                   item: item,
@@ -87,6 +90,7 @@ import {
               </Text>
             </TouchableOpacity>
           </View>
+
         </View>
       </SafeAreaView>
     );

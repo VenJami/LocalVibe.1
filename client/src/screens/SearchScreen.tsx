@@ -60,7 +60,7 @@ const SearchScreen = ({navigation}: Props) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <SafeAreaView>
+        <SafeAreaView className='bg-[#F1FFF8]'>
           <View className="p-3">
             <View className="w-full flex-row items-center bg-white">
               <TouchableOpacity

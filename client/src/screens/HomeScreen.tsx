@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -12,13 +12,12 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
-import { getAllPosts } from '../../redux/actions/postAction';
+import {getAllPosts} from '../../redux/actions/postAction';
 import PostCard from '../components/PostCard';
 import Loader from '../common/Loader';
-import { getAllUsers } from '../../redux/actions/userAction';
-import Lottie from 'lottie-react-native'
+import {getAllUsers} from '../../redux/actions/userAction';
+import Lottie from 'lottie-react-native';
 const loader = require('../assets/newsfeed/animation_lkbqh8co.json');
-
 
 type Props = {
   navigation: any;
@@ -59,11 +58,11 @@ const HomeScreen = ({navigation}: Props) => {
   }
 
   function onScrollEndDrag(event: any) {
-    const { nativeEvent } = event;
-    const { contentOffset } = nativeEvent;
-    const { y } = contentOffset;
+    const {nativeEvent} = event;
+    const {contentOffset} = nativeEvent;
+    const {y} = contentOffset;
     setOffsetY(y);
-  
+
     if (y <= -refreshingHeight && !isRefreshing) {
       setIsRefreshing(true);
       setTimeout(() => {
@@ -98,7 +97,12 @@ const HomeScreen = ({navigation}: Props) => {
 
   return (
     <SafeAreaView className="flex-1 bg-green-50">
-      <StatusBar animated={true} backgroundColor={"#fff"} barStyle={"dark-content"} showHideTransition={'fade'}/>
+      <StatusBar
+        animated={true}
+        backgroundColor={'#fff'}
+        barStyle={'dark-content'}
+        showHideTransition={'fade'}
+      />
 
       <View className="flex flex-row p-2 justify-between bg-white">
         <View>
@@ -108,7 +112,9 @@ const HomeScreen = ({navigation}: Props) => {
         </View>
 
         <View className="flex flex-row p-2 justify-between">
-          <TouchableOpacity onPress={() => navigation.navigate('Search')} className="rounded-full p-2 mx-2 bg-green-50">
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Search')}
+            className="rounded-full p-2 mx-2 bg-green-50">
             <Image source={require('../assets/newsfeed/search.png')} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -121,91 +127,88 @@ const HomeScreen = ({navigation}: Props) => {
         </View>
       </View>
 
-
       <View className="flex-1 my-1 mb-[43px]">
         <TouchableOpacity
           className="w-full bg-white items-center p-2 pb-[30px]"
-          onPress={() => navigation.navigate('Post')}
-        >
+          onPress={() => navigation.navigate('Post')}>
           <Image source={require('../assets/newsfeed/post.png')} />
         </TouchableOpacity>
       </View>
 
       <>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <SafeAreaView>
-          <Lottie
-            ref={lottieViewRef}
-            style={{
-              height: refreshingHeight,
-              display: isRefreshing ? 'flex' : 'none',
-              position: 'absolute',
-              top: 15,
-              left: 0,
-              right: 0,
-            }}
-            loop={false}
-            source={loader}
-            progress={progress}
-          />
-          {/* custom loader not working in android that's why I used here built in loader for android and custom loader for android but both working perfectly */}
-         {
-          Platform.OS === 'ios' ? (
-            <FlatList
-            data={posts}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item}) => (
-              <PostCard navigation={navigation} item={item} />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <SafeAreaView>
+            <Lottie
+              ref={lottieViewRef}
+              style={{
+                height: refreshingHeight,
+                display: isRefreshing ? 'flex' : 'none',
+                position: 'absolute',
+                top: 15,
+                left: 0,
+                right: 0,
+              }}
+              loop={false}
+              source={loader}
+              progress={progress}
+            />
+            {Platform.OS === 'ios' ? (
+              <FlatList
+                data={posts}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item}) => (
+                  <PostCard navigation={navigation} item={item} />
+                )}
+                onScroll={onScroll}
+                onScrollEndDrag={onScrollEndDrag}
+                onResponderRelease={onRelease}
+                ListHeaderComponent={
+                  <Animated.View
+                    style={{
+                      paddingTop: extraPaddingTop,
+                    }}
+                  />
+                }
+              />
+            ) : (
+              <FlatList
+                data={posts.slice(0, 5)}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item}) => (
+                  <PostCard navigation={navigation} item={item} />
+                )}
+                onScroll={onScroll}
+                onScrollEndDrag={onScrollEndDrag}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => {
+                      setRefreshing(true);
+                      getAllPosts()(dispatch);
+                      getAllUsers()(dispatch).then(() => {
+                        setRefreshing(false);
+                      });
+                    }}
+                    progressViewOffset={refreshingHeight}
+                  />
+                }
+                onResponderRelease={onRelease}
+                ListHeaderComponent={
+                  <Animated.View
+                    style={{
+                      paddingTop: extraPaddingTop,
+                    }}
+                  />
+                }
+                onEndReached={null}
+                onEndReachedThreshold={0.1}
+              />
             )}
-            onScroll={onScroll}
-            onScrollEndDrag={onScrollEndDrag}
-            onResponderRelease={onRelease}
-            ListHeaderComponent={
-              <Animated.View
-                style={{
-                  paddingTop: extraPaddingTop,
-                }}
-              />
-            }
-          />
-          ) : (
-            <FlatList
-            data={posts}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item}) => (
-              <PostCard navigation={navigation} item={item} />
-            )}
-            onScroll={onScroll}
-            onScrollEndDrag={onScrollEndDrag}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => {
-                  setRefreshing(true);
-                  getAllPosts()(dispatch);
-                  getAllUsers()(dispatch).then(() => {
-                    setRefreshing(false);
-                  });
-                }}
-                progressViewOffset={refreshingHeight}
-              />
-            }
-            onResponderRelease={onRelease}
-            ListHeaderComponent={
-              <Animated.View
-                style={{
-                  paddingTop: extraPaddingTop,
-                }}
-              />
-            }
-          />
-          )
-         }
-        </SafeAreaView>
-      )}
-    </>
+          </SafeAreaView>
+        )}
+      </>
     </SafeAreaView>
   );
 };

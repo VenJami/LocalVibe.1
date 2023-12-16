@@ -10,8 +10,11 @@ const {
   getUser,
   updateUserAvatar,
   updateUserInfo,
+  updateUserCoor,
 } = require("../controllers/user");
+
 const { isAuthenticatedUser } = require("../middleware/auth");
+
 const router = express.Router();
 
 router.route("/registration").post(createUser);
@@ -31,6 +34,8 @@ router.route("/get-user/:id").get(isAuthenticatedUser, getUser);
 router.route("/update-avatar").put(isAuthenticatedUser, updateUserAvatar);
 
 router.route("/update-profile").put(isAuthenticatedUser, updateUserInfo);
+
+router.route("/update-coor").put(isAuthenticatedUser, updateUserCoor);
 
 router.route("/me").get(isAuthenticatedUser, userDetails);
 

@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^1.9.6",
     "axios": "^1.5.1",
     "cloudinary": "^1.41.0",
+    "immer": "^10.0.3",
     "lottie-react-native": "^6.3.1",
     "moment": "^2.29.4",
     "native-base": "^3.4.28",

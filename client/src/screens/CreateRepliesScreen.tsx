@@ -5,6 +5,7 @@ import {
     Image,
     TextInput,
     ScrollView,
+    StatusBar,
   } from 'react-native';
   import React, {useState} from 'react';
   import {TouchableOpacity} from 'react-native';
@@ -73,7 +74,6 @@ import {
             setImage('');
           });
       } else {
-        console.log(postId,post._id);
         await axios
           .put(
             `${URI}/add-reply`,
@@ -100,8 +100,9 @@ import {
       }
     };
     return (
-      <SafeAreaView>
-        <View className="flex-row items-center p-3">
+      <SafeAreaView className='bg-[#F1FFF8]'>
+        <StatusBar animated={true} backgroundColor={"#F1FFF8"} barStyle={"dark-content"} showHideTransition={'fade'}/>
+        <View className="flex-row items-center p-3 bg-[#F1FFF8]">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image
               source={{
@@ -155,11 +156,11 @@ import {
                 />
               )}
             </View>
-            {post.image ? (
+            {/* {post.image ? (
               <View className="absolute top-[125] left-8 h-[75%] w-[1px] bg-[#00000017]" />
             ) : (
               <View className="absolute top-12 left-5 h-[60%] w-[1px] bg-[#00000017]" />
-            )}
+            )} */}
   
             <View className="p-3">
               <View className="flex-row">
@@ -213,8 +214,8 @@ import {
           <View>
             <View className="p-2">
               <View className="w-full flex-row justify-end">
-                <TouchableOpacity onPress={createReplies}>
-                  <Text className="text-[#1977f2] mr-[10px]">Post</Text>
+                <TouchableOpacity onPress={createReplies} style={{ backgroundColor: '#017E5E', borderRadius: 8, paddingVertical: 10, paddingHorizontal: 15, width: '100%' }}>
+                  <Text className="text-white text-center">Reply</Text>
                 </TouchableOpacity>
               </View>
             </View>

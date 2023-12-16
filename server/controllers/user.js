@@ -6,6 +6,24 @@ const cloudinary = require("cloudinary");
 const Notification = require("../models/NotificationModel");
 const express = require("express");
 
+exports.updateUserCoor = catchAsyncErrors(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    user.latitude = req.body.latitude;
+    user.longitude = req.body.longitude;
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 401));
+  }
+});
+
 // Register user
 exports.createUser = catchAsyncErrors(async (req, res, next) => {
   try {
@@ -238,6 +256,8 @@ exports.updateUserInfo = catchAsyncErrors(async (req, res, next) => {
     user.name = req.body.name;
     user.userName = req.body.userName;
     user.bio = req.body.bio;
+    user.latitude = req.body.latitude;
+    user.longitude = req.body.longitude;
 
     await user.save();
 

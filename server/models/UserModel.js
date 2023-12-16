@@ -24,15 +24,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter your password"],
     },
-    location: {
-      type: {
-        type: String,
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number],
-        default: [0, 0],
-      },
+    latitude:{
+      type : Number,
+    },
+    longitude:{
+      type : Number,
     },
     avatar: {
       public_id: {
@@ -100,5 +96,6 @@ userSchema.methods.getJwtToken = function () {
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
 
 module.exports = mongoose.model("User", userSchema);

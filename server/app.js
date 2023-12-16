@@ -16,31 +16,25 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 }
 
 // Import the locationController
-const locationController = require("./controllers/location");
+// const locationController = require("./controllers/location");
 
 // Define a route for updating user location
-app.post("/api/v1/update-location", locationController.updateLocation);
+// app.post("/api/v1/update-location", locationController.updateLocation);
 
-app.post('/saveLocation', async (req, res) => {
-  const { userId, location } = req.body;
-
+app.post('/api/updateUserLocation', async (req, res) => {
   try {
-    // Find the user by userId and update the location
-    const user = await User.findByIdAndUpdate(userId, {
-      location: {
-        type: 'Point',
-        coordinates: [location.longitude, location.latitude],
-      },
+    const { userId, location } = req.body;
+
+    // Save the user's location to MongoDB
+    await UserLocation.create({
+      userId,
+      location,
     });
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    return res.status(200).json({ message: 'Location saved successfully' });
+    res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Error saving location:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error updating user location:', error);
+    res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 

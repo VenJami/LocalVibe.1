@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -70,7 +71,8 @@ const UserProfileScreen = ({navigation, route}: Props) => {
   return (
     <>
       {data && (
-        <SafeAreaView>
+        <SafeAreaView className='bg-[#F1FFF8]'>
+          <StatusBar backgroundColor="#F1FFF8" barStyle="dark-content" />
           {imagePreview ? (
             <TouchableOpacity
               className="h-screen bg-white w-full items-center justify-center"
@@ -153,8 +155,8 @@ const UserProfileScreen = ({navigation, route}: Props) => {
                       : 'Follow'}
                   </Text>
                 </TouchableOpacity>
-                <View className="w-full border-b border-b-[#00000032] pt-5 pb-2 relattive">
-                  <View className="w-[80%] m-auto flex-row justify-between">
+                <View className="w-full border-b border-b-[#00000032] pt-5 pb-2 relative">
+                  <View className="w-[70%] m-auto flex-row justify-between">
                     <TouchableOpacity onPress={() => setActive(0)}>
                       <Text
                         className="text-[18px] pl-3 text-black"

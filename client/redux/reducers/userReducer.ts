@@ -1,18 +1,19 @@
 import {createReducer} from '@reduxjs/toolkit';
 
-const intialState = {
+const initialState = {
   isAuthenticated: false,
   loading: false,
   isLoading: false,
   user: {},
   users: [],
-  token:"",
+  token: '',
   error: null,
   friendRequests: [],
   acceptedFriends: [],
 };
 
-export const userReducer = createReducer(intialState, {
+export const userReducer = createReducer(initialState, {
+
   userRegisterRequest: state => {
     state.loading = true;
     state.isAuthenticated = false;
@@ -62,7 +63,7 @@ export const userReducer = createReducer(intialState, {
   userLogoutSuccess: state => {
     state.loading = false;
     state.isAuthenticated = false;
-    state.user = {};
+    state.user = { location: { coordinates: [null, null] } };
   },
   userLogoutFailed: state => {
     state.loading = false;

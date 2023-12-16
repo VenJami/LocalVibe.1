@@ -142,7 +142,7 @@ const ProfileScreen = ({navigation}: Props) => {
           <View
             className="border-b border-b-[#00000032] px-4 py-3"
             style={{width: '100%'}}>
-            <View className="w-[75%] m-auto flex-row justify-between">
+            <View className="w-[70%] m-auto flex-row justify-between">
               <TouchableOpacity onPress={() => setActive(0)}>
                 <Text
                   className="text-[18px] pl-3 text-[#000]"
@@ -154,7 +154,7 @@ const ProfileScreen = ({navigation}: Props) => {
                 <Text
                   className="text-[18px] pl-3 text-[#000]"
                   style={{opacity: active === 1 ? 1 : 0.6}}>
-                  Events
+                  Vibe
                 </Text>
               </TouchableOpacity>
             </View>
