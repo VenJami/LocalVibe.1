@@ -150,8 +150,8 @@ const MapScreen = ({navigation}: Props) => {
         showsUserLocation
         showsMyLocationButton
         region={{
-          latitude: userLocation ? userLocation.latitude : 37.7749,
-          longitude: userLocation ? userLocation.longitude : -122.4194,
+          latitude: userLocation ? userLocation.latitude : 14.8327,
+          longitude: userLocation ? userLocation.longitude : 120.2822,
           latitudeDelta: 0.009,
           longitudeDelta: 0.009,
         }}>
@@ -221,12 +221,12 @@ const MapScreen = ({navigation}: Props) => {
                       <View style={styles.bubble}>
                         <View className="relative">
                           <Image
-                            source={{uri: item?.avatar.url}}
-                            height={80}
-                            width={80}
+                            source={{ uri: item.avatar.url }}
+                            style={{ width: 80, height: 80, borderRadius: 40 }}
                           />
+                          <Text style={styles.name}>{item?.name}</Text>
                         </View>
-                        <Text style={styles.name}>{item?.name}</Text>
+                        
                       </View>
                       <View style={styles.arrowBorder} />
                       <View style={styles.arrow} />

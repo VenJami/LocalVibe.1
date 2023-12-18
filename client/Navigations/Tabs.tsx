@@ -6,6 +6,7 @@ import MapScreen from '../src/screens/MapScreen';
 import NotificationScreen from '../src/screens/NotificationScreen';
 import FriendScreen from '../src/screens/FriendScreen';
 import {View, Image, StyleSheet} from 'react-native';
+import ProfileScreen from '../src/screens/ProfileScreen';
 
 type Props = {};
 
@@ -14,7 +15,7 @@ const homeIcon = require('../src/assets/navbar/home.png');
 const bellIcon = require('../src/assets/navbar/bell.png');
 const mapIcon = require('../src/assets/navbar/map.png');
 const messageIcon = require('../src/assets/navbar/messages.png');
-const usersIcon = require('../src/assets/navbar/users.png');
+const usersIcon = require('../src/assets/navbar/user.png');
 
 const Tabs = (props: Props) => {
   return (
@@ -94,8 +95,8 @@ const Tabs = (props: Props) => {
         })}
       />
       <Tab.Screen
-        name="Friends"
-        component={FriendScreen}
+        name="Profile"
+        component={ProfileScreen}
         options={({route}) => ({
           tabBarIcon: ({focused}) => (
             <View

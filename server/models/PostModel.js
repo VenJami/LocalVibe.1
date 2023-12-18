@@ -16,6 +16,12 @@ const postSchema = new mongoose.Schema(
     user: {
       type: Object,
     },
+    // latitude: {
+    //   type: Number,
+    // },
+    // longitude: {
+    //   type: Number,
+    // },
     likes: [
       {
         name: {

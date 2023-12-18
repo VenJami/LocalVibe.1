@@ -84,6 +84,7 @@ const HomeScreen = ({navigation}: Props) => {
       }, 3000);
     }
   }
+  
 
   useEffect(() => {
     getAllPosts()(dispatch);
@@ -111,13 +112,39 @@ const HomeScreen = ({navigation}: Props) => {
 
   function sliceHandler(){
     const s = slice + 2;
-
-    console.log(s)
     setSlice(s)
+  }
+const proximityThreshold = 10; // Set your desired threshold in kilometers
+
+const nearbyPosts = posts
+  .filter((post: { user: { latitude: number; longitude: number; }; }) => {
+    const distance = haversine(
+      user.latitude,
+      user.longitude,
+      post.user.latitude,
+      post.user.longitude
+    );
+    return distance <= proximityThreshold;
+  })
+  .slice(0, slice);
+
+  function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-green-50">
+    <SafeAreaView className="flex-1 bg-green-50 mb-[27%]">
       <StatusBar
         animated={true}
         backgroundColor={'#fff'}
@@ -195,7 +222,7 @@ const HomeScreen = ({navigation}: Props) => {
               />
             ) : (
               <FlatList
-                data={posts.slice(0, slice)}
+                data={nearbyPosts}
                 showsVerticalScrollIndicator={false}
                 renderItem={({item}) => (
                   <PostCard navigation={navigation} item={item} />

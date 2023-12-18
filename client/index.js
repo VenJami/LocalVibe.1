@@ -14,6 +14,7 @@ LogBox.ignoreLogs(['Non-serializable values were found in the navigation state.'
 LogBox.ignoreLogs(['Possible Unhandled Promise Rejection (id: 0):']);
 LogBox.ignoreLogs(['Possible Unhandled Promise Rejection (id: 1):']);
 LogBox.ignoreLogs([/ReactImageView: Image source "" doesn't exist/]);
+LogBox.ignoreLogs([/The action 'NAVIGATE' with payload {"name":"Home"} was not handled by any navigator./]);
 
 
 AppRegistry.registerComponent(appName, () => App);
