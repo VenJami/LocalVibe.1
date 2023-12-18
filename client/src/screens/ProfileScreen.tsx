@@ -202,7 +202,7 @@ const ProfileScreen = ({navigation}: Props) => {
           <>
             {repliesData.length === 0 && (
               <Text className="text-black text-[14px] mt-8 text-center">
-                You have no events yet!
+                No Post yet!
               </Text>
             )}
           </>

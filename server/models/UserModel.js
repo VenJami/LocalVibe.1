@@ -42,23 +42,11 @@ const userSchema = new mongoose.Schema(
         required: [true, "Please upload one profile picture!"],
       },
     },
-    friendRequests: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
     friends: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ObjectId,
-        ref: "User",
-      },
-    ],
-    sentFriendRequest: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        userId: {
+          type: String,
+        },
       },
     ],
     followers: [

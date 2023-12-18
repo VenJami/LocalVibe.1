@@ -18,7 +18,6 @@ import axios from 'axios';
 import {URI} from '../../redux/URI';
 import PostDetailsCard from './PostDetailsCard';
 
-
 type Props = {
   navigation: any;
   item: any;
@@ -28,7 +27,7 @@ type Props = {
 };
 
 const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
-  const {user, token,users} = useSelector((state: any) => state.user);
+  const {user, token, users} = useSelector((state: any) => state.user);
   const {posts} = useSelector((state: any) => state.post);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
@@ -83,17 +82,17 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
   };
 
   useEffect(() => {
-   if(users){
-    const updatedUsers = [...users, user];
-    const userData = updatedUsers.find((user: any) =>
-        user._id === item.user._id
-     );
-     setUserInfo(userData);
-   }
+    if (users) {
+      const updatedUsers = [...users, user];
+      const userData = updatedUsers.find(
+        (user: any) => user._id === item.user._id,
+      );
+      setUserInfo(userData);
+    }
   }, [users]);
 
   return (
-    <View className="p-[15px] border-b border-b-[#F1FFF8] bg-white" >
+    <View className="p-[15px] border-b border-b-[#F1FFF8] bg-white">
       <View className="relative">
         <View className="flex-row w-full">
           <View className="flex-row w-[85%] items-center">
@@ -136,15 +135,23 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View className="ml-[50px] my-3">
-          {item.image && (
-            <Image
-              source={{uri: item.image.url}}
-              style={{aspectRatio: 1, borderRadius: 10, zIndex: 1111}}
-              resizeMode="contain"
-            />
-          )}
-        </View>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('PostDetails', {
+              data: item,
+            })
+          }>
+          <View className="ml-[50px] my-3">
+            {item.image && (
+              <Image
+                source={{uri: item.image.url}}
+                style={{aspectRatio: 1, borderRadius: 10, zIndex: 1111}}
+                resizeMode="contain"
+              />
+            )}
+          </View>
+        </TouchableOpacity>
+
         <View className="flex-row items-center left-[50px] top-[5px]">
           <TouchableOpacity onPress={() => reactsHandler(item)}>
             {item.likes.length > 0 ? (
@@ -194,7 +201,7 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
               className="ml-5"
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/512/3905/3905866.png',
@@ -203,7 +210,7 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
               height={25}
               className="ml-5"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* <TouchableOpacity>
             <Image
               source={{
@@ -229,20 +236,20 @@ const PostCard = ({item, isReply, navigation, postId, replies}: Props) => {
               </Text>
             </TouchableOpacity>
 
-            {item.likes.length !== 0 &&
+            {item.likes.length !== 0 && (
               <TouchableOpacity
-              onPress={() =>
-                item.likes.length !== 0 &&
-                navigation.navigate('PostLikeCard', {
-                  item: item.likes,
-                  navigation: navigation,
-                })
-              }>
-              <Text className="text-[16px[ text-[#0000009b]">
-                {item.likes.length} {item.likes.length > 1 ? 'likes' : 'like'}
-              </Text>
-            </TouchableOpacity>
-            }
+                onPress={() =>
+                  item.likes.length !== 0 &&
+                  navigation.navigate('PostLikeCard', {
+                    item: item.likes,
+                    navigation: navigation,
+                  })
+                }>
+                <Text className="text-[16px[ text-[#0000009b]">
+                  {item.likes.length} {item.likes.length > 1 ? 'likes' : 'like'}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
 

@@ -269,7 +269,7 @@ const PostDetailsCard = ({
               className="ml-5"
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/512/3905/3905866.png',
@@ -278,7 +278,7 @@ const PostDetailsCard = ({
               height={25}
               className="ml-5"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* <TouchableOpacity>
             <Image
               source={{
@@ -307,13 +307,13 @@ const PostDetailsCard = ({
         </View>  
         }
           
-        {/* {isRepliesReply && (
+        {isRepliesReply && (
           <View className="pl-[50px] pt-4 flex-row">
             <Text className="text-[16px[ text-[#0000009b]">
               {item.likes.length} {item.likes.length > 1 ? 'likes' : 'like'}
             </Text>
           </View>
-        )} */}
+        )}
       </View>
       {item.reply && (
         <>

@@ -36,7 +36,7 @@ const SignupScreen = ({navigation}: Props) => {
   };
 
   return (
-    <View className="bg-teal-50 justify-center items-center flex">
+    <View className="bg-teal-50 justify-center items-center flex-1">
       <Image
         className="absolute top-0	 w-full h-full"
         source={backgroundImage}

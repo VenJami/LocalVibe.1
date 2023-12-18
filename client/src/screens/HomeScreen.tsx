@@ -17,6 +17,10 @@ import PostCard from '../components/PostCard';
 import Loader from '../common/Loader';
 import {getAllUsers} from '../../redux/actions/userAction';
 import Lottie from 'lottie-react-native';
+import geolib from 'geolib';
+
+
+
 const loader = require('../assets/newsfeed/animation_lkbqh8co.json');
 
 type Props = {
@@ -31,8 +35,9 @@ const HomeScreen = ({navigation}: Props) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [extraPaddingTop] = useState(new Animated.Value(0));
-  const refreshingHeight = 100;
+  const refreshingHeight = 50;
   const lottieViewRef = useRef<Lottie>(null);
+  const [slice, setSlice] = useState(5);
 
   let progress = 0;
   if (offsetY < 0 && !isRefreshing) {
@@ -45,6 +50,14 @@ const HomeScreen = ({navigation}: Props) => {
     const {contentOffset} = nativeEvent;
     const {y} = contentOffset;
     setOffsetY(y);
+  }
+
+  function refresh(){
+    setIsRefreshing(true);
+      setTimeout(() => {
+        getAllPosts()(dispatch);
+        setIsRefreshing(false);
+      }, 500);
   }
 
   function onRelease() {
@@ -84,7 +97,7 @@ const HomeScreen = ({navigation}: Props) => {
         duration: 0,
         useNativeDriver: false,
       }).start();
-      lottieViewRef.current?.play();
+      setSlice(5)
     } else {
       Animated.timing(extraPaddingTop, {
         toValue: 0,
@@ -92,8 +105,16 @@ const HomeScreen = ({navigation}: Props) => {
         easing: Easing.elastic(1.3),
         useNativeDriver: false,
       }).start();
+      setSlice(5)
     }
   }, [isRefreshing]);
+
+  function sliceHandler(){
+    const s = slice + 2;
+
+    console.log(s)
+    setSlice(s)
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-green-50">
@@ -106,7 +127,7 @@ const HomeScreen = ({navigation}: Props) => {
 
       <View className="flex flex-row p-2 justify-between bg-white">
         <View>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity onPress={(refresh)}>
             <Image source={require('../assets/wordlogo.png')} />
           </TouchableOpacity>
         </View>
@@ -174,7 +195,7 @@ const HomeScreen = ({navigation}: Props) => {
               />
             ) : (
               <FlatList
-                data={posts.slice(0, 5)}
+                data={posts.slice(0, slice)}
                 showsVerticalScrollIndicator={false}
                 renderItem={({item}) => (
                   <PostCard navigation={navigation} item={item} />
@@ -202,7 +223,7 @@ const HomeScreen = ({navigation}: Props) => {
                     }}
                   />
                 }
-                onEndReached={null}
+                onEndReached={sliceHandler}
                 onEndReachedThreshold={0.1}
               />
             )}

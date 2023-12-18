@@ -114,12 +114,13 @@ const PostScreen = ({navigation}: Props) => {
         )}
 
       </View>
-      <View className="p-2 flex-row justify-between">
-        <Text>Everyone will see this post</Text>
-        <TouchableOpacity onPress={createPost}>
-          <Text className="text-emerald-700">Post</Text>
-        </TouchableOpacity>
-      </View>
+      <View className="p-2">
+              <View className="w-full flex-row justify-end">
+                <TouchableOpacity onPress={createPost} style={{ backgroundColor: '#017E5E', borderRadius: 8, paddingVertical: 10, paddingHorizontal: 15, width: '100%' }}>
+                  <Text className="text-white text-center">Post</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
     </SafeAreaView>
   );
 };

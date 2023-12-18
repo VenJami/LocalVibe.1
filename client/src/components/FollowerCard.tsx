@@ -86,7 +86,7 @@ import {
               <Text
                 className="text-[18px] pl-3 text-[#000]"
                 style={{opacity: active === 2 ? 1 : 0.6}}>
-                Pending
+                Friends
               </Text>
             </TouchableOpacity>
           </View>
@@ -157,7 +157,7 @@ import {
                         <Text className="text-[18px] text-black">
                           {item?.name}
                         </Text>
-                        {item.role === 'Admin' && (
+                        {/* {item.role === 'Admin' && (
                           <Image
                             source={{
                               uri: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png',
@@ -166,7 +166,7 @@ import {
                             height={15}
                             className="ml-1"
                           />
-                        )}
+                        )} */}
                       </View>
                       <Text className="text-[16px] text-[#000000ba]">
                         {item?.userName}
@@ -190,9 +190,9 @@ import {
           />
         )}
   
-        {active === 2 && (
+        {/* {active === 2 && (
           <Text className="text-[18px] text-center pt-10 text-black">No Pending</Text>
-        )}
+        )} */}
       </SafeAreaView>
     );
   };

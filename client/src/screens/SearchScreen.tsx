@@ -60,7 +60,7 @@ const SearchScreen = ({navigation}: Props) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <SafeAreaView className='bg-[#F1FFF8]'>
+        <SafeAreaView className='bg-[#F1FFF8] flex-1'>
           <View className="p-3">
             <View className="w-full flex-row items-center bg-white">
               <TouchableOpacity
@@ -92,7 +92,7 @@ const SearchScreen = ({navigation}: Props) => {
               <Loader />
             ) : (
               <FlatList
-                data={data}
+                data={data.slice(0,5)}
                 renderItem={({item}) => {
                   const handleFollowUnfollow = async (e: any) => {
                     try {
@@ -130,9 +130,9 @@ const SearchScreen = ({navigation}: Props) => {
                             <Text className="pl-3 text-[18px] text-black">
                               {item.name}
                             </Text>
-                            <Text className="pl-3 text-[18px] text-black">
+                            {/* <Text className="pl-3 text-[18px] text-black">
                               {item.userName}
-                            </Text>
+                            </Text> */}
                             <Text className="pl-3 mt-1 text-[16px] text-[#444]">
                               {item.followers.length} followers
                             </Text>

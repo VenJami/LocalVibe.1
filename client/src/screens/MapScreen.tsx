@@ -1,5 +1,13 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, TextInput, Button, StyleSheet, Text, Image} from 'react-native';
+import {
+  View,
+  TextInput,
+  Button,
+  StyleSheet,
+  Text,
+  Image,
+  FlatList,
+} from 'react-native';
 import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {GeoPosition} from 'react-native-geolocation-service';
@@ -7,12 +15,24 @@ import axios from 'axios';
 import {URI} from '../../redux/URI';
 import {useDispatch, useSelector} from 'react-redux';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {loadUser} from '../../redux/actions/userAction';
+import {getAllUsers, loadUser} from '../../redux/actions/userAction';
 
-const MapScreen = () => {
+type Props = {
+  navigation: any;
+};
+
+const MapScreen = ({navigation}: Props) => {
+  const [data, setData] = useState([
+    {
+      name: '',
+      avatar: {url: ''},
+      latitude: null,
+      longitude: null,
+    },
+  ]);
   const [userLocation, setUserLocation] = useState<GeoPosition | null>(null);
   const [watchID, setWatchID] = useState<number | null>(null);
-  const {user, token} = useSelector((state: any) => state.user);
+  const {users, user, token} = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
   const [userData, setUserData] = useState({
@@ -40,6 +60,16 @@ const MapScreen = () => {
   };
 
   useEffect(() => {
+    getAllUsers()(dispatch);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (users) {
+      setData(users);
+    }
+  }, [users]);
+
+  useEffect(() => {
     if (Geolocation) {
       const success = (geoPosition: {
         coords: {
@@ -52,7 +82,6 @@ const MapScreen = () => {
           speed: any;
         };
       }) => {
-        
         setUserLocation({
           latitude: geoPosition.coords.latitude,
           longitude: geoPosition.coords.longitude,
@@ -68,8 +97,6 @@ const MapScreen = () => {
           longitude: geoPosition.coords.longitude,
         });
       };
-
-     
 
       const error = (error: {code: any; message: any}) => {
         console.log(error.code, error.message);
@@ -116,6 +143,7 @@ const MapScreen = () => {
           }}
         />
       </View>
+
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{flex: 1}}
@@ -124,8 +152,8 @@ const MapScreen = () => {
         region={{
           latitude: userLocation ? userLocation.latitude : 37.7749,
           longitude: userLocation ? userLocation.longitude : -122.4194,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
+          latitudeDelta: 0.009,
+          longitudeDelta: 0.009,
         }}>
         {userLocation && (
           <Marker
@@ -164,7 +192,100 @@ const MapScreen = () => {
             </Callout>
           </Marker>
         )}
-        <Marker
+
+        {/* Use the map function directly */}
+        {data &&
+          Array.isArray(data) &&
+          data.map((item, index) => {
+            const latitude = item.latitude;
+            const longitude = item.longitude;
+
+            if (
+              latitude != null &&
+              longitude != null &&
+              !isNaN(latitude) &&
+              !isNaN(longitude)
+            ) {
+              return (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: latitude,
+                    longitude: longitude,
+                  }}
+                  title="Your Friends Location"
+                  description="Your Friends are here"
+                  image={require('../assets/maps/pin.png')}>
+                  <Callout tooltip>
+                    <View>
+                      <View style={styles.bubble}>
+                        <View className="relative">
+                          <Image
+                            source={{uri: item?.avatar.url}}
+                            height={80}
+                            width={80}
+                          />
+                        </View>
+                        <Text style={styles.name}>{item?.name}</Text>
+                      </View>
+                      <View style={styles.arrowBorder} />
+                      <View style={styles.arrow} />
+                    </View>
+                  </Callout>
+                </Marker>
+              );
+            }
+
+            return null;
+          })}
+
+        {/* <FlatList
+          data={data}
+          renderItem={({item}) => {
+            const latitude = item.latitude;
+            const longitude = item.longitude;
+
+            if (
+              latitude != null &&
+              longitude != null &&
+              !isNaN(latitude) &&
+              !isNaN(longitude)
+            ) {
+              console.log('Latitude:', latitude, 'Longitude:', longitude);
+              return (
+                <Marker
+                  coordinate={{
+                    latitude: latitude,
+                    longitude: longitude,
+                  }}
+                  title="Your Friends Location"
+                  description="Your Friends are here"
+                  image={require('../assets/maps/pin.png')}>
+                  <Callout tooltip>
+                    <View>
+                      <View style={styles.bubble}>
+                        <View className="relative">
+                          <Image
+                            source={{uri: item?.avatar.url}}
+                            height={80}
+                            width={80}
+                          />
+                        </View>
+                        <Text style={styles.name}>{item?.name}</Text>
+                      </View>
+                      <View style={styles.arrowBorder} />
+                      <View style={styles.arrow} />
+                    </View>
+                  </Callout>
+                </Marker>
+              );
+            }
+
+            return null;
+          }}
+        /> */}
+
+        {/* <Marker
           coordinate={{
             latitude: 14.8425,
             longitude: 120.2851,
@@ -172,9 +293,8 @@ const MapScreen = () => {
           title="Your Friends Location"
           description="Your Friends are here"
           image={require('../assets/maps/pin.png')}
-        />
-
-        <Marker
+        /> */}
+        {/* <Marker
           coordinate={{
             latitude: 14.8289,
             longitude: 120.2867,
@@ -182,7 +302,7 @@ const MapScreen = () => {
           title="Your Friends Location"
           description="Your Friends are here"
           image={require('../assets/maps/pin.png')}
-        />
+        /> */}
       </MapView>
       <View style={styles.buttonContainer}>
         <Button title="Upload Location" onPress={handleSubmitHandler} />
