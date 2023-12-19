@@ -66,22 +66,83 @@ const toggleModal = () => {
   };
 
 
-  const [buttonType, setButtonType] = useState<string | null>(null);
+  const [buttonType, setButtonType] = useState('Public');
 
   const filterData = () => {
-    if (buttonType === 'friends') {
+    const distanceThreshold = 5; // Adjust the distance threshold as needed
+  
+    if (buttonType === 'Friends') {
       // Filter data to only show friends
       const friendData = users.filter((item: any) => {
         // Assuming you have the user's ID in the "following" array
         const isFriend = user?.following.some((friend: any) => friend.userId === item._id);
         return isFriend;
       });
-      setData(friendData);
+  
+      // Use haversine to filter only within the distance threshold
+      const filteredData = friendData.filter((item: any) => {
+        if (item.latitude && item.longitude) {
+          const distance = haversine(
+            user?.latitude,
+            user?.longitude,
+            item.latitude,
+            item.longitude,
+          );
+          return distance <= distanceThreshold;
+        }
+        return false;
+      });
+  
+      setData(filteredData);
+    } else if (buttonType === 'Public') {
+      // Show all data within the distance threshold for public
+      const filteredData = users.filter((item: {latitude: number; longitude: number}) => {
+        if (item.latitude && item.longitude) {
+          const distance = haversine(
+            user?.latitude,
+            user?.longitude,
+            item.latitude,
+            item.longitude,
+          );
+          return distance <= distanceThreshold;
+        }
+        return false;
+      });
+  
+      setData(filteredData);
     } else {
       // Show all data for other button types
-      setData(users);
+      const filteredData = users.filter((item: any) => {
+        if (item.latitude && item.longitude) {
+          const distance = haversine(
+            user?.latitude,
+            user?.longitude,
+            item.latitude,
+            item.longitude,
+          );
+          return distance <= distanceThreshold;
+        }
+        return false;
+      });
+  
+      setData(filteredData);
     }
   };
+
+  function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  }
 
   const handleButtonClick = (type: string) => {
     setButtonType(type);
@@ -154,11 +215,33 @@ const toggleModal = () => {
     };
   }, []);
 
+  const handleRemoveLocation = async () => {
+
+    await axios
+      .put(
+        `${URI}/update-coor`,
+        {
+          latitude: null,
+          longitude: null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res: any) => {
+        loadUser()(dispatch);
+        setUserLocation(null);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.mapset} onTouchEnd={toggleModal}>
         <Image source={require('../assets/maps/users-alt.png')} />
       </View>
+      <Text style={styles.modeLabel}>{buttonType ? `${buttonType}` : ''}</Text>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{flex: 1}}
@@ -255,6 +338,7 @@ const toggleModal = () => {
       </MapView>
       <View style={styles.buttonContainer}>
         <Button color="#017E5E" title="Upload Location" onPress={handleSubmitHandler} />
+        <Button color="#017E5E" title="Remove Location" onPress={handleRemoveLocation} />
       </View>
       {/* Modal */}
       <Modal isVisible={isModalVisible} style={styles.modalContainer}>
@@ -263,25 +347,25 @@ const toggleModal = () => {
           style={styles.button}
           title="Public"
           color="#017E5E"
-          onPress={() => handleButtonClick('public')}
+          onPress={() => handleButtonClick('Public')}
         />
         <Button
           style={styles.button}
           title="Friends"
           color="#017E5E"
-          onPress={() => handleButtonClick('friends')}
+          onPress={() => handleButtonClick('Friends')}
         />
         <Button
           style={styles.button}
           title="Groups"
           color="#017E5E"
-          onPress={() => handleButtonClick('groups')}
+          onPress={() => handleButtonClick('Groups')}
         />
         <Button
           style={styles.button}
           title="Businesses"
           color="#017E5E"
-          onPress={() => handleButtonClick('businesses')}
+          onPress={() => handleButtonClick('Businesses')}
         />
       </View>
       <Button color="#017E5E" title="Close" onPress={toggleModal} />
@@ -293,6 +377,13 @@ const toggleModal = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  modeLabel: {
+    color: '#017E5E',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 10,
   },
   buttonContainer: {
     position: 'absolute',
