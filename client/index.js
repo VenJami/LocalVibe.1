@@ -13,7 +13,9 @@ LogBox.ignoreLogs(['source.uri should not be an empty string']);
 LogBox.ignoreLogs(['Non-serializable values were found in the navigation state.']);
 LogBox.ignoreLogs(['Possible Unhandled Promise Rejection (id: 0):']);
 LogBox.ignoreLogs(['Possible Unhandled Promise Rejection (id: 1):']);
+LogBox.ignoreLogs(['Warning: Failed prop type: Invalid prop `value` of type `number` supplied to `TextInput`, expected `string`.']);
 LogBox.ignoreLogs([/ReactImageView: Image source "" doesn't exist/]);
+LogBox.ignoreLogs([/ReactImageView: Image source "null" doesn't exist/]);
 LogBox.ignoreLogs([/The action 'NAVIGATE' with payload {"name":"Home"} was not handled by any navigator./]);
 
 

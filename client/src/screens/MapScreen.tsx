@@ -14,8 +14,8 @@ import {GeoPosition} from 'react-native-geolocation-service';
 import axios from 'axios';
 import {URI} from '../../redux/URI';
 import {useDispatch, useSelector} from 'react-redux';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {getAllUsers, loadUser} from '../../redux/actions/userAction';
+import Modal from 'react-native-modal';
 
 type Props = {
   navigation: any;
@@ -39,6 +39,19 @@ const MapScreen = ({navigation}: Props) => {
     latitude: user?.latitude,
     longitude: user?.longitude,
   });
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+const toggleModal = () => {
+  setModalVisible(!isModalVisible);
+};
+
+const handleButtonClick = (buttonType: any) => {
+  // Handle button click based on the buttonType (public, friends, groups, businesses)
+  console.log(`Button clicked: ${buttonType}`);
+  // Add your logic here
+  toggleModal(); // Close the modal after button click
+};
 
   const handleSubmitHandler = async () => {
     await axios
@@ -122,28 +135,9 @@ const MapScreen = ({navigation}: Props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchBar}>
-        <GooglePlacesAutocomplete
-          placeholder="Search here..."
-          onPress={(data, details = null) => {
-            // Handle the selected place data
-            console.log(data, details);
-          }}
-          query={{
-            key: 'AIzaSyClgs3wKE9q0DI-dMrOnwBOIpfFkHDDf6c',
-            language: 'en',
-          }}
-          styles={{
-            textInputContainer: {
-              width: '100%',
-            },
-            description: {
-              fontWeight: 'bold',
-            },
-          }}
-        />
+      <View style={styles.mapset} onTouchEnd={toggleModal}>
+        <Image source={require('../assets/maps/users-alt.png')} />
       </View>
-
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{flex: 1}}
@@ -221,12 +215,11 @@ const MapScreen = ({navigation}: Props) => {
                       <View style={styles.bubble}>
                         <View className="relative">
                           <Image
-                            source={{ uri: item.avatar.url }}
-                            style={{ width: 80, height: 80, borderRadius: 40 }}
+                            source={{uri: item.avatar.url}}
+                            style={{width: 80, height: 80, borderRadius: 40}}
                           />
                           <Text style={styles.name}>{item?.name}</Text>
                         </View>
-                        
                       </View>
                       <View style={styles.arrowBorder} />
                       <View style={styles.arrow} />
@@ -238,75 +231,37 @@ const MapScreen = ({navigation}: Props) => {
 
             return null;
           })}
-
-        {/* <FlatList
-          data={data}
-          renderItem={({item}) => {
-            const latitude = item.latitude;
-            const longitude = item.longitude;
-
-            if (
-              latitude != null &&
-              longitude != null &&
-              !isNaN(latitude) &&
-              !isNaN(longitude)
-            ) {
-              console.log('Latitude:', latitude, 'Longitude:', longitude);
-              return (
-                <Marker
-                  coordinate={{
-                    latitude: latitude,
-                    longitude: longitude,
-                  }}
-                  title="Your Friends Location"
-                  description="Your Friends are here"
-                  image={require('../assets/maps/pin.png')}>
-                  <Callout tooltip>
-                    <View>
-                      <View style={styles.bubble}>
-                        <View className="relative">
-                          <Image
-                            source={{uri: item?.avatar.url}}
-                            height={80}
-                            width={80}
-                          />
-                        </View>
-                        <Text style={styles.name}>{item?.name}</Text>
-                      </View>
-                      <View style={styles.arrowBorder} />
-                      <View style={styles.arrow} />
-                    </View>
-                  </Callout>
-                </Marker>
-              );
-            }
-
-            return null;
-          }}
-        /> */}
-
-        {/* <Marker
-          coordinate={{
-            latitude: 14.8425,
-            longitude: 120.2851,
-          }}
-          title="Your Friends Location"
-          description="Your Friends are here"
-          image={require('../assets/maps/pin.png')}
-        /> */}
-        {/* <Marker
-          coordinate={{
-            latitude: 14.8289,
-            longitude: 120.2867,
-          }}
-          title="Your Friends Location"
-          description="Your Friends are here"
-          image={require('../assets/maps/pin.png')}
-        /> */}
       </MapView>
       <View style={styles.buttonContainer}>
-        <Button title="Upload Location" onPress={handleSubmitHandler} />
+        <Button color="#017E5E" title="Upload Location" onPress={handleSubmitHandler} />
       </View>
+      {/* Modal */}
+      <Modal isVisible={isModalVisible} style={styles.modalContainer}>
+      <View style={styles.buttonContainers}>
+        <Button
+          style={styles.button}
+          title="Public"
+          onPress={() => handleButtonClick('public')}
+        />
+        <Button
+          style={styles.button}
+          title="Friends"
+          onPress={() => handleButtonClick('friends')}
+        />
+        <Button
+          style={styles.button}
+          title="Groups"
+          onPress={() => handleButtonClick('groups')}
+        />
+        <Button
+          style={styles.button}
+          title="Businesses"
+          onPress={() => handleButtonClick('businesses')}
+        />
+      </View>
+      {/* Add more buttons or customize as needed */}
+      <Button title="Close" onPress={toggleModal} />
+    </Modal>
     </View>
   );
 };
@@ -321,22 +276,43 @@ const styles = StyleSheet.create({
     left: '50%',
     marginLeft: -75, // Adjust this value to center the button
   },
-  searchBar: {
+  mapset: {
     flexDirection: 'row',
+    padding: 10,
     marginHorizontal: 20,
     marginRight: 80,
     marginTop: 12,
     position: 'absolute',
     zIndex: 1,
-  },
-  searchInput: {
-    flex: 1,
-    height: 38,
-    paddingLeft: 10,
-    borderRadius: 50,
+    backgroundColor: 'white',
+    borderColor: 'black',
     borderWidth: 1,
-    borderColor: '#e3e3e3',
-    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  buttonContainers: {
+    justifyContent: 'space-around',
+    margin: 10,
+  },
+  button: {
+    marginBottom: 10,
+    width: 100,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    width: 300,
+    height: 200,
+    alignSelf: 'center',
+    marginTop: '140%',
   },
   map: {
     flex: 1,
