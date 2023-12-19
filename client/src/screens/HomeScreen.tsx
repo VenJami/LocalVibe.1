@@ -321,7 +321,7 @@ const HomeScreen = ({navigation}: Props) => {
         (e.g., 1 for very close, 5 for close, 10 for moderate, etc.)
       </Text>
       <Button
-        title="Update"
+        title="Close"
         color="#017E5E"
         onPress={updateProximityThreshold}
       />

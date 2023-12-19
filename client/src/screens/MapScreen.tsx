@@ -49,8 +49,8 @@ const toggleModal = () => {
 const handleButtonClick = (buttonType: any) => {
   // Handle button click based on the buttonType (public, friends, groups, businesses)
   console.log(`Button clicked: ${buttonType}`);
-  // Add your logic here
-  toggleModal(); // Close the modal after button click
+
+  toggleModal();
 };
 
   const handleSubmitHandler = async () => {
@@ -109,6 +109,42 @@ const handleButtonClick = (buttonType: any) => {
           latitude: geoPosition.coords.latitude,
           longitude: geoPosition.coords.longitude,
         });
+
+        <Marker
+            coordinate={{
+              latitude: geoPosition.coords.latitude,
+              longitude: geoPosition.coords.longitude,
+            }}
+            title="Your Location"
+            description="Your are here"
+            image={require('../assets/maps/pin.png')}>
+            <Callout tooltip>
+              <View>
+                <View style={styles.bubble}>
+                  <View className="relative">
+                    <Image
+                      source={{uri: user?.avatar.url}}
+                      height={80}
+                      width={80}
+                    />
+                    {/* {user.role === 'Admin' && (
+                      <Image
+                        source={{
+                          uri: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png',
+                        }}
+                        width={18}
+                        height={18}
+                        className="ml-2 absolute bottom-0 left-0"
+                      />
+                    )} */}
+                  </View>
+                  <Text style={styles.name}>{user?.name}</Text>
+                </View>
+                <View style={styles.arrowBorder} />
+                <View style={styles.arrow} />
+              </View>
+            </Callout>
+          </Marker>
       };
 
       const error = (error: {code: any; message: any}) => {
@@ -259,7 +295,6 @@ const handleButtonClick = (buttonType: any) => {
           onPress={() => handleButtonClick('businesses')}
         />
       </View>
-      {/* Add more buttons or customize as needed */}
       <Button title="Close" onPress={toggleModal} />
     </Modal>
     </View>
@@ -274,7 +309,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     left: '50%',
-    marginLeft: -75, // Adjust this value to center the button
+    marginLeft: -75,
   },
   mapset: {
     flexDirection: 'row',
