@@ -46,13 +46,6 @@ const toggleModal = () => {
   setModalVisible(!isModalVisible);
 };
 
-const handleButtonClick = (buttonType: any) => {
-  // Handle button click based on the buttonType (public, friends, groups, businesses)
-  console.log(`Button clicked: ${buttonType}`);
-
-  toggleModal();
-};
-
   const handleSubmitHandler = async () => {
     await axios
       .put(
@@ -71,6 +64,33 @@ const handleButtonClick = (buttonType: any) => {
         loadUser()(dispatch);
       });
   };
+
+
+  const [buttonType, setButtonType] = useState<string | null>(null);
+
+  const filterData = () => {
+    if (buttonType === 'friends') {
+      // Filter data to only show friends
+      const friendData = users.filter((item: any) => {
+        // Assuming you have the user's ID in the "following" array
+        const isFriend = user?.following.some((friend: any) => friend.userId === item._id);
+        return isFriend;
+      });
+      setData(friendData);
+    } else {
+      // Show all data for other button types
+      setData(users);
+    }
+  };
+
+  const handleButtonClick = (type: string) => {
+    setButtonType(type);
+    toggleModal();
+  };
+
+  useEffect(() => {
+    filterData();
+  }, [buttonType, users, user]);
 
   useEffect(() => {
     getAllUsers()(dispatch);
@@ -110,41 +130,6 @@ const handleButtonClick = (buttonType: any) => {
           longitude: geoPosition.coords.longitude,
         });
 
-        <Marker
-            coordinate={{
-              latitude: geoPosition.coords.latitude,
-              longitude: geoPosition.coords.longitude,
-            }}
-            title="Your Location"
-            description="Your are here"
-            image={require('../assets/maps/pin.png')}>
-            <Callout tooltip>
-              <View>
-                <View style={styles.bubble}>
-                  <View className="relative">
-                    <Image
-                      source={{uri: user?.avatar.url}}
-                      height={80}
-                      width={80}
-                    />
-                    {/* {user.role === 'Admin' && (
-                      <Image
-                        source={{
-                          uri: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png',
-                        }}
-                        width={18}
-                        height={18}
-                        className="ml-2 absolute bottom-0 left-0"
-                      />
-                    )} */}
-                  </View>
-                  <Text style={styles.name}>{user?.name}</Text>
-                </View>
-                <View style={styles.arrowBorder} />
-                <View style={styles.arrow} />
-              </View>
-            </Callout>
-          </Marker>
       };
 
       const error = (error: {code: any; message: any}) => {
@@ -277,25 +262,29 @@ const handleButtonClick = (buttonType: any) => {
         <Button
           style={styles.button}
           title="Public"
+          color="#017E5E"
           onPress={() => handleButtonClick('public')}
         />
         <Button
           style={styles.button}
           title="Friends"
+          color="#017E5E"
           onPress={() => handleButtonClick('friends')}
         />
         <Button
           style={styles.button}
           title="Groups"
+          color="#017E5E"
           onPress={() => handleButtonClick('groups')}
         />
         <Button
           style={styles.button}
           title="Businesses"
+          color="#017E5E"
           onPress={() => handleButtonClick('businesses')}
         />
       </View>
-      <Button title="Close" onPress={toggleModal} />
+      <Button color="#017E5E" title="Close" onPress={toggleModal} />
     </Modal>
     </View>
   );
@@ -309,7 +298,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     left: '50%',
-    marginLeft: -75,
+    marginLeft: -75, // Adjust this value to center the button
   },
   mapset: {
     flexDirection: 'row',
@@ -341,7 +330,7 @@ const styles = StyleSheet.create({
     width: 100,
   },
   modalContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#F1FFF8',
     padding: 16,
     borderRadius: 8,
     width: 300,
